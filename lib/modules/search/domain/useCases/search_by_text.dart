@@ -4,18 +4,22 @@ import 'package:clean_architecture_app/modules/search/domain/repositories/search
 import 'package:dartz/dartz.dart';
 
 abstract class SearchByText{
-  Future<Either<FailureSearch, List<ResultSearch>?>>? call(String? searchText);
+  Future<Either<FailureSearch, List<ResultSearch>?>> call(String? searchText);
 }
 
 class SearchByTextImpl implements SearchByText{
 
   final SearchRepository repository;
-
   SearchByTextImpl(this.repository);
 
   @override
-  Future<Either<FailureSearch, List<ResultSearch>?>>? call(String? searchText) {
-    return repository.search(searchText!);
+  Future<Either<FailureSearch, List<ResultSearch>?>> call(String? searchText) async{
+
+    if(searchText == null || searchText.isEmpty){
+      return Left(InvalidTextError());
+    }
+
+    return repository.search(searchText);
   }
 
 }
